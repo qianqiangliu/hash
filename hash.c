@@ -4,21 +4,23 @@
 #define M	11
 #define array_length(a) (sizeof(a) / sizeof(a[0]))
 
+typedef int key_t;
+
 typedef struct node {
-	int data;
+	key_t key;
 	struct node *next;
 } chain_t;
 
-static int h(int key)
+static int h(key_t key)
 {
 	return key % M;
 }
 
-chain_t *hash_search(chain_t *hash_table, int key, chain_t **end)
+chain_t *hash_search(chain_t *hash_table, key_t key, chain_t **end)
 {
 	chain_t *cur = hash_table;
 	chain_t *pre = NULL;
-	while (cur != NULL && cur->data != key) {
+	while (cur != NULL && cur->key != key) {
 		pre = cur;
 		cur = cur->next;
 	}
@@ -32,7 +34,7 @@ chain_t *hash_search(chain_t *hash_table, int key, chain_t **end)
 /**
  * "link method" to solve the collision
  */
-void create_hash_table(chain_t *hash_table[], const int *key, int n)
+void create_hash_table(chain_t *hash_table[], const key_t *key, int n)
 {
 	int i;
 	chain_t *p;
@@ -43,7 +45,7 @@ void create_hash_table(chain_t *hash_table[], const int *key, int n)
 		cur = hash_search(hash_table[h(key[i])], key[i], &pre);
 		if (cur == NULL) {
 			p = (chain_t *)malloc(sizeof(chain_t));
-			p->data = key[i];
+			p->key = key[i];
 			p->next = NULL;
 			
 			if (pre == NULL) {
@@ -59,7 +61,7 @@ void print_list(const chain_t *list)
 {
 	const chain_t *p = list;
 	while (p) {
-		printf("%d -> ", p->data);
+		printf("%d -> ", p->key);
 		p = p->next;
 	}
 	printf("^\n");
@@ -79,7 +81,7 @@ void print_hash(chain_t *hash[], int len)
 int main()
 {
 	int i;
-	int sample[] = {47, 7, 11, 11, 29, 16, 92, 22, 8, 3, 33};
+	key_t sample[] = {47, 7, 11, 11, 29, 16, 92, 22, 8, 3, 33};
 	chain_t *hash_table[11];
 
 	for (i = 0; i < array_length(hash_table); i++) {

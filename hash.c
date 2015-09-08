@@ -31,21 +31,22 @@ static chain_t *hash_search(chain_t *hash, key_t key, chain_t **end)
 void create_hash_table(chain_t *hash_table[], const key_t *key, int n)
 {
 	int i;
-	chain_t *p;
+	int pos;
 	chain_t *cur;
 	chain_t *pre;
 
 	for (i = 0; i < n; i++) {
-		cur = hash_search(hash_table[h(key[i])], key[i], &pre);
+		pos = h(key[i]);
+		cur = hash_search(hash_table[pos], key[i], &pre);
 		if (cur == NULL) {
-			p = (chain_t *)malloc(sizeof(chain_t));
-			p->key = key[i];
-			p->next = NULL;
+			cur = (chain_t *)malloc(sizeof(chain_t));
+			cur->key = key[i];
+			cur->next = NULL;
 			
 			if (pre == NULL) {
-				hash_table[h(key[i])] = p;
+				hash_table[pos] = cur;
 			} else {
-				pre->next = p;
+				pre->next = cur;
 			}
 		}
 	}
